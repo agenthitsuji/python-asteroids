@@ -3,13 +3,26 @@
 # throughout this file
 
 import pygame
-
-from constants import * 
+import player
+import constants
 
 def main():
+
+    # Welcome Text #
+    print(f"Starting Asteroids!\nScreen width: {constants.SCREEN_WIDTH}\nScreen height: {constants.SCREEN_HEIGHT}")
+
+
+    # PyGame Initialization #
     pygame.init()
-    print(f"Starting Asteroids!\nScreen width: {SCREEN_WIDTH}\nScreen height: {SCREEN_HEIGHT}")
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+    # PyGame Clock
+    clock = pygame.time.Clock()
+    dt = 0
+
+    # Player Object #
+    p1 = player.Player(constants.SCREEN_WIDTH / 2, constants.SCREEN_HEIGHT / 2)
+
+    # Game Loop #
 
     game_state = 0
     while(game_state == 0):
@@ -18,8 +31,19 @@ def main():
             if event.type == pygame.QUIT:
                 return
 
-        pygame.Surface.fill(screen, (0,0,0))
+        # Screen
+        pygame.Surface.fill(screen, (120,120,120))
+    
+        # Player
+        p1.draw(screen)
+
+        # Flip
         pygame.display.flip()
+
+        # Clock
+        dt = clock.tick(60) / 1000
+        print(f"current delta: {dt}")
+        
 
 
 
