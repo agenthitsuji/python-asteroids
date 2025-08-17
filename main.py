@@ -2,9 +2,14 @@
 # the open-source pygame library
 # throughout this file
 
+import sys
+
 import pygame
 import player
 import constants
+import asteroid
+import asteroidfield
+import shot
 
 def main():
 
@@ -24,15 +29,26 @@ def main():
     updateable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
 
+    asteroids  =  pygame.sprite.Group()
+    shots = pygame.sprite.Group()
+
+    # Containers
     player.Player.containers = (updateable, drawable)
+    asteroid.Asteroid.containers = (updateable, drawable, asteroids)
+    asteroidfield.AsteroidField.containers = (updateable)
+    shot.Shot.containers = (updateable, drawable, shots)
 
 
     # Player Object #
     p1 = player.Player(constants.SCREEN_WIDTH / 2, constants.SCREEN_HEIGHT / 2)
 
+    # AsteroidField Object
+    a1 = asteroidfield.AsteroidField()
+
     # Game Loop #
 
     game_state = 0
+    points = 0
     while(game_state == 0):
 
         for event in pygame.event.get():
@@ -45,10 +61,27 @@ def main():
         # Drawing
         for thing in drawable:
             thing.draw(screen)
+            #print(thing)
 
 
         # Updating
         updateable.update(dt)
+
+        # Collision Check - Player
+        for a in asteroids:
+            if (a.collision_check(p1)):
+                print(f'you are dead! youve got {points} points')
+                sys.exit()
+
+        # Collision Check - Bullet
+        for a in asteroids:
+            for s in shots:
+                if (a.collision_check(s)):
+                    a.split()
+                    points += 1
+                    print(f'asteroid killed! points: {points}')
+
+
 
         # Flip
         pygame.display.flip()
