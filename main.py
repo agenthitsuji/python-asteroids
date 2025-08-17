@@ -15,9 +15,17 @@ def main():
     # PyGame Initialization #
     pygame.init()
     screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+
     # PyGame Clock
     clock = pygame.time.Clock()
     dt = 0
+
+    # PyGame Group
+    updateable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+
+    player.Player.containers = (updateable, drawable)
+
 
     # Player Object #
     p1 = player.Player(constants.SCREEN_WIDTH / 2, constants.SCREEN_HEIGHT / 2)
@@ -34,16 +42,20 @@ def main():
         # Screen
         pygame.Surface.fill(screen, (120,120,120))
     
-        # Player
-        p1.draw(screen)
-        p1.update(dt)
+        # Drawing
+        for thing in drawable:
+            thing.draw(screen)
+
+
+        # Updating
+        updateable.update(dt)
 
         # Flip
         pygame.display.flip()
 
         # Clock
         dt = clock.tick(60) / 1000
-        print(f"current delta: {dt}")
+        #print(f"current delta: {dt}")
         
 
 
